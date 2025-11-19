@@ -25,10 +25,10 @@ DOCKER_IMAGE = Variable.get("DOCKER_IMAGE_DATA_ENGINEERING", default_var=None)
 with DAG('first_tests',
          default_args=default_args,
          description='Test - First Test',
-         start_date=None,
-         schedule_interval=None,
-         catchup=True,
-         tags=['betfair'],
+         start_date=pendulum.datetime(2025, 11, 19, 0, 0, tz="America/Sao_Paulo"),
+         schedule_interval="*/2 * * * *",   # Every 2 minutes
+         catchup=False,
+         tags=['test'],
          dagrun_timeout=timedelta(hours=2),
          max_active_runs=1) as dag:
 
@@ -36,13 +36,13 @@ with DAG('first_tests',
         task_id='start_task'
     )
 
-    dag_betfair_odds_s3 = DockerOperator(
-        task_id="dag_betfair_odds_s3",
+    start_test = DockerOperator(
+        task_id="start_test",
         image=DOCKER_IMAGE,
         api_version="auto",
         network_mode="host",
         docker_url=DOCKER_URL,
-        entrypoint=["make", "betfair.betfair_odds_from_s3"],
+        entrypoint=["make", "testing.first.tests"],
         xcom_all=True,
         force_pull=True,
         mount_tmp_dir=False,
@@ -53,4 +53,4 @@ with DAG('first_tests',
         task_id='end_task',
     )
 
-    start_task >> authenticate_aws >> dag_betfair_odds_s3 >> end_task
+    start_task >> start_test >> end_task
