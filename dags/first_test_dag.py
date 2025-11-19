@@ -22,7 +22,7 @@ default_args: dict = {
 DOCKER_URL = Variable.get("DOCKER_URL_ALT", default_var=None)
 DOCKER_IMAGE = Variable.get("DOCKER_IMAGE_DATA_ENGINEERING", default_var=None)
 
-with DAG('first_tests',
+with DAG('start_test_cicd',
          default_args=default_args,
          description='Test - First Test',
          start_date=pendulum.datetime(2025, 11, 19, 0, 0, tz="America/Sao_Paulo"),
@@ -36,8 +36,8 @@ with DAG('first_tests',
         task_id='start_task'
     )
 
-    start_test = DockerOperator(
-        task_id="start_test",
+    start_test_cicd = DockerOperator(
+        task_id="start_test_cicd",
         image=DOCKER_IMAGE,
         api_version="auto",
         network_mode="host",
@@ -53,4 +53,4 @@ with DAG('first_tests',
         task_id='end_task',
     )
 
-    start_task >> start_test >> end_task
+    start_task >> start_test_cicd >> end_task
