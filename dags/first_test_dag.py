@@ -44,7 +44,7 @@ with DAG('start_test_cicd',
         docker_url=DOCKER_URL,
         entrypoint=["make", "testing.first.tests"],
         xcom_all=True,
-        force_pull=True,
+        force_pull=False,
         mount_tmp_dir=False,
         auto_remove=True,
     )
