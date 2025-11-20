@@ -7,6 +7,9 @@ class FirstTestFlow():
     def __greet__(self) -> None:
         for i in range(3):
             logger.info("Testando 1... 2... 3...")
+    
+    def handle(self):
+        print("olá Gustavo")
 
 
       
